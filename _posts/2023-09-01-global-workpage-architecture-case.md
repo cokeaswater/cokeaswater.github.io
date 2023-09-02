@@ -56,7 +56,7 @@ Client ->> API : save work status
 
 거기다 작업자들이 모두 한 지역에 몰려있다 하더라도 각자 접근하는 리소스가 다르다보니 CDN 은 항상 miss hit 케이스로 origin 서버에서 리소스를 가져다 전달했고, 어렵게(?) CDN 에 저장된 리소스는 빠르게 다시 로드되는 기회를 많이 얻지 못했습니다. 설령 기회를 얻는다 할지라도 이미 한번 리소스를 로드하는데 오랜 기다림을 얻었던 그 동일 작업자일 확률이 오히려 더 높고, 그는 이미 짜증이 났습니다.
 
-![](../_resources/2023_0901_global/before_global_architecture.png)
+![](/_resources/2023_0901_global/before_global_architecture.png)
 
 ## 리소스 전달을 위한 인프라 아키텍쳐 보완
 
