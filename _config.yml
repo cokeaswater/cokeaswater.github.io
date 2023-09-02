@@ -82,7 +82,7 @@ mermaid: true
 comments:
   active: 'giscus' # The global switch for posts comments, e.g., 'disqus'.  Keep it empty means disable
   giscus:
-    repo: cokeaswater/cokeaswater.github.io# <gh-username>/<repo>
+    repo: cokeaswater/cokeaswater.github.io # <gh-username>/<repo>
     repo_id: R_kgDOKOb4nA
     category: General
     category_id: DIC_kwDOKOb4nM4CZCTH
