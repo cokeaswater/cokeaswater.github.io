@@ -43,13 +43,13 @@ social:
     # - https://www.facebook.com/username
     # - https://www.linkedin.com/in/username
 
-google_site_verification: # fill in to your verification string
+google_site_verification: Bmg-WUnAJtMMJjFJDyM0KJduoWmT7Rs63iC3hUpCY8o # fill in to your verification string
 
 # ↑ --------------------------
 # The end of `jekyll-seo-tag` settings
 
 google_analytics:
-  id: # fill in your Google Analytics ID
+  id: G-Y6RLN39PEB # fill in your Google Analytics ID
 
 # Prefer color scheme setting.
 #
@@ -80,23 +80,15 @@ mermaid: true
 
 
 comments:
-  active: #'' # The global switch for posts comments, e.g., 'disqus'.  Keep it empty means disable
-  # The active options are as follows:
-  disqus:
-    shortname: # fill with the Disqus shortname. › https://help.disqus.com/en/articles/1717111-what-s-a-shortname
-  # utterances settings › https://utteranc.es/
-  utterances:
-    repo: # <gh-username>/<repo>
-    issue_term: # < url | pathname | title | ...>
-  # Giscus options › https://giscus.app
+  active: 'giscus' # The global switch for posts comments, e.g., 'disqus'.  Keep it empty means disable
   giscus:
-    repo: # <gh-username>/<repo>
-    repo_id:
-    category:
-    category_id:
-    mapping: # optional, default to 'pathname'
+    repo: cokeaswater/cokeaswater.github.io # <gh-username>/<repo>
+    repo_id: R_kgDOKOb4nA
+    category: General
+    category_id: DIC_kwDOKOb4nM4CZCTH
+    mapping: url # optional, default to 'pathname'
     input_position: # optional, default to 'bottom'
-    lang: # optional, default to the value of `site.lang`
+    lang: ko # optional, default to the value of `site.lang`
     reactions_enabled: # optional, default to the value of `1`
 
 # Self-hosted static assets, optional › https://github.com/cotes2020/chirpy-static-assets
