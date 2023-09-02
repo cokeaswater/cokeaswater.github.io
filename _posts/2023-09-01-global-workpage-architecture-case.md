@@ -56,7 +56,7 @@ Client ->> API : save work status
 
 거기다 작업자들이 모두 한 지역에 몰려있다 하더라도 각자 접근하는 리소스가 다르다보니 CDN 은 항상 miss hit 케이스로 origin 서버에서 리소스를 가져다 전달했고, 어렵게(?) CDN 에 저장된 리소스는 빠르게 다시 로드되는 기회를 많이 얻지 못했습니다. 설령 기회를 얻는다 할지라도 이미 한번 리소스를 로드하는데 오랜 기다림을 얻었던 그 동일 작업자일 확률이 오히려 더 높고, 그는 이미 짜증이 났습니다.
 
-![](/_resources/2023_0901_global/before_global_architecture.png)
+![](https://github.com/cokeaswater/cokeaswater.github.io/raw/develop/_resources/2023_0901_global/before_global_architecture.png)
 
 ## 리소스 전달을 위한 인프라 아키텍쳐 보완
 
@@ -73,8 +73,7 @@ Client ->> API : save work status
 - 아키텍쳐 변경 적용 이전의 데이터들은 분산시키지 않는다. (기존 데이터는 이미 완료된 작업물이므로 추가 비용을 씌우지 않음)
 - 당장은 빠른 적용을 위해 옵션을 두지 않지만, 작업 속도 보장 지역에 대한 비용 부가 옵션 적용을 추후 검토한다.
 
-![](/_resources/2023_0901_global/after_global_architecture.png)
-
+![](https://github.com/cokeaswater/cokeaswater.github.io/raw/develop/_resources/2023_0901_global/after_global_architecture.png)
 
 ### S3 지역간 복제 기능 좀 더 살펴보기
 
@@ -160,7 +159,7 @@ S3 버킷 복제는 객체마다 개별로 복제될 버킷을 지정할 수 있
 
 CloudFront 는 지역 동적  라우팅을 공식 기능적으로 지원하지 않지만, AWS 는 S3 하위의 추가 기능인 다중 리전 액세스 포인트란 상품으로 리소스로의 동적 라우팅을 제공합니다. MRAP 의 사용법은 매우 심플합니다. MRAP 라우터를 생성하며 라우팅할 버킷들을 연결 지정하면, 라우팅 ARN 이 생성되고, 이 ARN 을 기반으로 한 라우팅 도메인 ([`https://xxxx.mrap.accesspoint.s3-global.amazonaws.com`](https://maefjijergna7.mrap.accesspoint.s3-global.amazonaws.com/)) 으로 호출하면 라우터 정책에 의해 가장 가까운 버킷과 통신이 이뤄집니다.
 
-![](/_resources/2023_0901_global/mrap.png)
+![](https://github.com/cokeaswater/cokeaswater.github.io/raw/develop/_resources/2023_0901_global/mrap.png)
 
 MRAP 대시보드는 연결된 버킷들 중 연결은 유지하되, 당장의 라우팅 규칙에서 특정 버킷을 배제하는 운영 설정이 제공되며, 연결된 버킷간의 복제 규칙들에 대한 관리 기능도 제공합니다. 주의할 점은 MRAP 는 최초 생성 시 연결된 버킷 외의 버킷 추가나 제거는 불가능하다는 것 입니다. (라우팅 규칙에서 제외할 순 있지만) 연결 버킷의 구성을 변경하려면 새로운 MRAP 를 생성해야 하는데, 기본적으로 MRAP 는 라우터이고, 라우터에 연결되는 버킷들의 내부 설정은 변경되는 것이 아니기에 큰 부담은 아니지만, 라우팅으로 제공할 도메인을 새로운 MRAP ARN 을 기반으로 정확히 제공할 수 있도록 어플리케이션에서 잘 신경써줘야 합니다. 대다수의 회사들이 객체 접근 권한이나 시간 등에 제약을 둔 signed (or CloudFront persigned) URL 을 사용할텐데요. MRAP 역시 signed URL 을 생성할 수 있습니다.
 
@@ -170,7 +169,7 @@ MRAP 는 CDN 이 아닌 S3 라우터입니다. 이로 인해 객체 전달 속�
 
 MRAP 는 편리하지만 상대적 비용이 추가로 발생합니다. MRAP 부분에서 CloudFront 는 라우팅 기능을 기본적으로 제공하지 않는다 말씀드렸습니다만, Lambda 를 사용하면 CloudFront 에 코드로 커스텀 라우팅 기능을 덧붙일 수 있습니다.  람다 엣지를 활용하면 CF 로 인입되는 요청-응답 앞 뒤 과정 중 CF 동작에 영향을 주는 메타 활용, 조작하여 동작을 제어할 수 있습니다. 로직은 간단합니다. 요청을 받은 CF 의 위치에 따라 CF 가 데이터를 가져올 원본 S3 버킷을 판단해 조작하는 방법입니다.
 
-![](/_resources/2023_0901_global/lambda_edge.png)
+![](https://github.com/cokeaswater/cokeaswater.github.io/raw/develop/_resources/2023_0901_global/lambda_edge.png)
 
 CF 의 데이터 전송 가격은 S3 대비 저렴하므로 MRAP 의 데이터 전송 대비 비용 절감에 초점을 맞춘다면 더 적절한 선택일 것입니다. MRAP 의 라우팅 가격은 람다의 가격과 비교해서 퉁칠 수 있는 수준이 되지 않을까 싶습니다. (미비한 부분이라 생각해 제대로 계산해보진 않았습니다.) 다만 상대적 약점으로는 람다 인스턴스가 초기화 되는데 들어가는 시간이 들어간다는 것이고, 요청 시 초기화가 발생할 때마다 간헐적 차이는 있으나 테스트 결과로는 약 100ms ~ 200ms 소요되었습니다. 물론 리소스 당 접근 빈도에 비하면 AWS 지역 엣지의 접근 빈도는 비할수 없이 잦을 것이기에 큰 영향은 아닐 것으로 예상되지만, 어쨌거나 약간의 지연 요소가 있다는 것은 참고해야 합니다. 물론 MRAP 대비 운영 대응 접근성도 아무래도 떨어지긴 하겠죠.
 
@@ -184,7 +183,7 @@ CF 의 데이터 전송 가격은 S3 대비 저렴하므로 MRAP 의 데이터 �
 
 ### Lambda@Edge 와 CloundFront Function
 
-![](/_resources/2023_0901_global/cf_function_lambda_edge.png)
+![](https://github.com/cokeaswater/cokeaswater.github.io/raw/develop/_resources/2023_0901_global/cf_function_lambda_edge.png)
 
 CF Function 과 Lambda@Edge 는 유사하게 CF 요청 인입을 제어하는 관점 제어 방안입니다만, 약간의 차이가 있습니다. 위 그림과 같이 CF 는 엣지 와 지역 엣지로 크게 구분되는데, 실제 원본에과의 연동 및 제어를 하는 구간은 지역 엣지 이고, 엣지는 그 앞단의 일반적인 캐싱 데이터만 존재하는 레이어 라고 간단하게 구분할 수 있을 겁니다. 해서 실제 동작의 시점이 다르고 관점 캐치에 제공되는 이벤트의 구조도 당연히 다릅니다. CORS 정책 허용 정보는 어차피 모두 허용 값으로 리턴이라는 간단한 로직이고, 당연히 빨리 응답할수록 의도에 부합하므로 네트워크 단계를 조금이라도 줄이는 CF Function 이 더 타당합니다. 실행 시간도 가격 비용도 Lambda@Edge 에 비해 상대적으로 훨씬 저렴합니다.
 
