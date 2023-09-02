@@ -74,7 +74,7 @@ Client ->> API : save work status
 - 아키텍쳐 변경 적용 이전의 데이터들은 분산시키지 않는다. (기존 데이터는 이미 완료된 작업물이므로 추가 비용을 씌우지 않음)
 - 당장은 빠른 적용을 위해 옵션을 두지 않지만, 작업 속도 보장 지역에 대한 비용 부가 옵션 적용을 추후 검토한다.
 
-![](after_global_architecture.png)
+![](../_resources/2023_0901_global/after_global_architecture.png)
 
 
 ### S3 지역간 복제 기능 좀 더 살펴보기
