@@ -86,7 +86,7 @@ comments:
     repo_id: R_kgDOKOb4nA
     category: General
     category_id: DIC_kwDOKOb4nM4CZCTH
-    mapping: url# optional, default to 'pathname'
+    mapping: url # optional, default to 'pathname'
     input_position: # optional, default to 'bottom'
     lang: ko # optional, default to the value of `site.lang`
     reactions_enabled: # optional, default to the value of `1`
